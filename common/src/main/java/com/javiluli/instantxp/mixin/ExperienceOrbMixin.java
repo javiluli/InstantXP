@@ -17,7 +17,7 @@ public abstract class ExperienceOrbMixin {
          * EN - We check that we are not on the client side (XP logic is handled on the server)
          * ES - Verificamos que no estemos en el cliente (la logica de XP es del servidor)
          */
-        if (!player.level().isClientSide) {
+        if (!player.level().isClientSide()) {
 
             /**
              * EN - We add the XP directly to the player (skips the cooldown)
