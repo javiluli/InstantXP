@@ -9,42 +9,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ExperienceOrb.class)
 public abstract class ExperienceOrbMixin {
-    @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
-    private void instantAbsorb(Player player, CallbackInfo ci) {
-        ExperienceOrb orb = (ExperienceOrb) (Object) this;
 
-        /**
+    @Inject(method = "playerTouch", at = @At("HEAD"))
+    private void instantAbsorb(Player player, CallbackInfo ci) {
+        /*
          * EN - We check that we are not on the client side (XP logic is handled on the server)
          * ES - Verificamos que no estemos en el cliente (la logica de XP es del servidor)
          */
         if (!player.level().isClientSide()) {
-
-            /**
-             * EN - We add the XP directly to the player (skips the cooldown)
-             * In 1.21.1, this method also handles Mending automatically
+            /*
+             * EN - We reset the pickup delay to 0.
+             * This allows the original Minecraft logic (including Mending) to run instantly.
              *
-             * ES - Anadimos la XP directamente al jugador (salta el cooldown)
-             * En 1.21.1, este metodo tambien gestiona Mending automaticamente
+             *  ES - Reseteamos el retraso de recogida a 0.
+             * Esto permite que la logica original de Minecraft (incluyendo Mending) se ejecute al instante.
              */
-            player.giveExperiencePoints(orb.getValue());
+            player.takeXpDelay = 0;
+        }
+    }
 
-            /**
-             * EN - We remove the orb from the world immediately
-             * This prevents the orb from bouncing around or waiting its turn
-             *
-             * ES - Eliminamos el orbe del mundo inmediatamente
-             * Esto evita que el orbe se quede rebotando o esperando turno
-             */
+    @Inject(method = "playerTouch", at = @At("RETURN"))
+    private void discardAfterTouch(Player player, CallbackInfo ci) {
+        ExperienceOrb orb = (ExperienceOrb) (Object) this;
+
+        /*
+         * EN - Once the original method has finished processing XP and Mending, we remove the orb.
+         * ES - Una vez el metodo original ha terminado de procesar XP y Mending, eliminamos el orbe.
+         */
+        if (!player.level().isClientSide()) {
             orb.discard();
-
-            /**
-             * EN - We cancel the original method
-             * This prevents Minecraft's base code from trying to process it again
-             *
-             * ES - Cancelamos el metodo original
-             * Asi evitamos que el codigo base de Minecraft intente procesarlo de nuevo
-             */
-            ci.cancel();
         }
     }
 }
