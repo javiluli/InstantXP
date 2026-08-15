@@ -15,7 +15,13 @@
 
 This small quality-of-life mod makes experience absorption nearly instant, while still preserving part of the XP orb animation. It significantly reduces the delay when absorbing experience orbs.
 
-> This table provides an estimate of the time required to absorb experience orbs in a controlled scenario (a test world available for download from game version 1.21.1).
+> [!WARNING]
+> It hasn’t been tested on multiplayer servers, but in principle it should work correctly when installed on the local client.
+
+> [!CAUTION]
+> Additionally, this mod could be considered cheating on some servers, so you should ask moderators to avoid any issues.
+
+> This table provides an estimate of the time required to absorb experience orbs in a controlled environment (a test world available for download [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip), starting from game version 1.21.1).
 
 | XP Level  | MC vanilla | InstantXP | Diff     | Reduction |
 |-----------|------------|-----------|----------|-----------|
@@ -80,8 +86,79 @@ This small quality-of-life mod makes experience absorption nearly instant, while
 | Level 295 | 28:44      | 15:53     | -12:51   | 45%       |
 | Level 300 | 29:45      | 16:28     | -13:17   | 45%       |
 
-> [!WARNING]
-> It hasn’t been tested on multiplayer servers, but in principle it should work correctly when installed on the local client.
+### Command blocks
 
-> [!CAUTION]
-> Additionally, this mod could be considered cheating on some servers, so you should ask moderators to avoid any issues.
+This section explains each command used to create the in-game level counter (map available [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip)).
+
+<table>
+  <tr>
+    <td>#1</td>
+    <td><code>/xp set @p 0 points</code></td>
+  </tr>
+  <tr>
+    <td>#2</td>
+    <td><code>/xp set @p 0 levels</code></td>
+  </tr>
+  <tr>
+    <td>#3</td>
+    <td><code>/scoreboard players add @p tiempo 1</code></td>
+  </tr>
+  <tr>
+    <td>#4</td>
+    <td><code>/execute as @p store result score @s nivel run xp query @s levels</code></td>
+  </tr>
+  <tr>
+    <td>#5</td>
+    <td><code>/execute as @p if score @s nivel matches 0 run scoreboard players set @s objetivo 5</code></td>
+  </tr>
+  <tr>
+    <td>#6</td>
+    <td><code>/execute as @p if score @s nivel matches 0 run scoreboard players set @s tiempo 0</code></td>
+  </tr>
+  <tr>
+    <td>#7</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo run scoreboard players operation @s temp = @s tiempo</code></td>
+  </tr>
+  <tr>
+    <td>#8</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo run scoreboard players operation @s temp /= #20 tiempo</code></td>
+  </tr>
+  <tr>
+    <td>#9</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo run scoreboard players operation @s minutos = @s temp</code></td>
+  </tr>
+  <tr>
+    <td>#10</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo run scoreboard players operation @s minutos /= #60 tiempo</code></td>
+  </tr>
+  <tr>
+    <td>#11</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo run scoreboard players operation @s segundos = @s temp</code></td>
+  </tr>
+  <tr>
+    <td>#12</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo run scoreboard players operation @s segundos %= #60 tiempo</code></td>
+  </tr>
+  <tr>
+    <td>#13</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo if score @s segundos matches 0..9 run tellraw @s [{"text":"Level "},{"score":{"name":"@s","objective":"objetivo"}},{"text":" reached in "},{"score":{"name":"@s","objective":"minutos"}},{"text":":0"},{"score":{"name":"@s","objective":"segundos"}}]</code></td>
+  </tr>
+  <tr>
+    <td>#14</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo if score @s segundos matches 10.. run tellraw @s [{"text":"Level "},{"score":{"name":"@s","objective":"objetivo"}},{"text":" reached in "},{"score":{"name":"@s","objective":"minutos"}},{"text":":"},{"score":{"name":"@s","objective":"segundos"}}]</code></td>
+  </tr>
+  <tr>
+    <td>#15</td>
+    <td><code>/execute as @p if score @s nivel >= @s objetivo run scoreboard players add @s objetivo 5</code></td>
+  </tr>
+  <tr>
+    <td>#16</td>
+    <td><code>/summon experience_orb ~1 ~ ~ {Value:10}</code></td>
+  </tr>
+  <tr>
+    <td>#17</td>
+    <td><code>/summon experience_orb ~1 ~ ~ {Value:30}</code></td>
+  </tr>
+</table>
+
+<img src="public/command_blocks.png" />
