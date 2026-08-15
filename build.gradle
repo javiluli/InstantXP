@@ -38,7 +38,7 @@ tasks.register('copyJars', Copy) {
     subprojects.forEach { subproject ->
         if (subproject.name != 'common') {
             from(subproject.layout.buildDirectory.dir('libs')) {
-                include "*-${minecraft_version}-*.jar"
+                include "*-${minecraft_version}-${version}.jar"
                 exclude "*-sources.jar", "*-dev.jar", "*-shadow.jar", "*-all.jar", "*-sources-dev.jar", "*-javadoc.jar"
             }
         }
@@ -60,32 +60,14 @@ tasks.register('Fabric_runClient') {
     dependsOn ':fabric:runClient'
 }
 
-tasks.register('Fabric_runServer') {
-    group = 'dev-run'
-    description = 'Run Fabric server'
-    dependsOn ':fabric:runServer'
-}
-
 tasks.register('Forge_runClient') {
     group = 'dev-run'
     description = 'Run Forge client'
     dependsOn ':forge:runClient'
 }
 
-tasks.register('Forge_runServer') {
-    group = 'dev-run'
-    description = 'Run Forge server'
-    dependsOn ':forge:runServer'
-}
-
 tasks.register('NeoForge_runClient') {
     group = 'dev-run'
     description = 'Run NeoForge client'
     dependsOn ':neoforge:runClient'
-}
-
-tasks.register('NeoForge_runServer') {
-    group = 'dev-run'
-    description = 'Run NeoForge server'
-    dependsOn ':neoforge:runServer'
 }
