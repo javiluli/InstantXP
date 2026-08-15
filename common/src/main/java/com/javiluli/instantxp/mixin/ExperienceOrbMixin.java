@@ -3,12 +3,20 @@ package com.javiluli.instantxp.mixin;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ExperienceOrb.class)
 public abstract class ExperienceOrbMixin {
+
+    @Shadow
+    private Player followingPlayer;
+
+    @Shadow
+    private int count;
 
     /*
      * EN - Pickup range used to absorb XP before the orb physically touches the player.
@@ -17,7 +25,11 @@ public abstract class ExperienceOrbMixin {
      * ES - Rango de recogida utilizado para absorber la XP antes de que el orbe toque fisicamente al jugador.
      * El orbe mantiene el movimiento original de Minecraft, conservando la sensacion visual de absorcion.
      */
-    private static final double INSTANT_PICKUP_RANGE = 1.25D;
+    @Unique
+    private static final double INSTANTXP_PICKUP_RANGE = 1.25D;
+
+    @Unique
+    private static final int INSTANTXP_MAX_PICKUPS_PER_TICK = 4096;
 
     @Inject(method = "playerTouch", at = @At("HEAD"))
     private void instantAbsorb(Player player, CallbackInfo ci) {
@@ -29,9 +41,11 @@ public abstract class ExperienceOrbMixin {
             /*
              * EN - We reset the pickup delay to 0.
              * This allows the original Minecraft logic (including Mending) to run instantly.
+             * We do not give XP, change the orb value/count, create orbs, or discard orbs here.
              *
              * ES - Reseteamos el retraso de recogida a 0.
              * Esto permite que la logica original de Minecraft (incluyendo Mending) se ejecute al instante.
+             * Aqui no damos XP, no cambiamos el valor/cantidad del orbe, no creamos orbes ni descartamos orbes.
              */
             player.takeXpDelay = 0;
         }
@@ -53,16 +67,13 @@ public abstract class ExperienceOrbMixin {
         }
 
         /*
-         * EN - We search for the nearest player inside the instant pickup range.
-         * The orb keeps moving normally until it gets close enough to the player.
+         * EN - We use the player already selected by vanilla attraction and only
+         * trigger vanilla pickup when the orb is close enough.
          *
-         * ES - Buscamos al jugador mas cercano dentro del rango de recogida instantanea.
-         * El orbe continua moviendose normalmente hasta acercarse lo suficiente al jugador.
+         * ES - Usamos el jugador ya seleccionado por la atraccion vanilla y solo
+         * activamos la recogida vanilla cuando el orbe esta suficientemente cerca.
          */
-        Player player = orb.level().getNearestPlayer(
-                orb,
-                INSTANT_PICKUP_RANGE
-        );
+        Player player = this.followingPlayer;
 
         /*
          * EN - If a player is close enough, we manually trigger Minecraft's original
@@ -70,15 +81,33 @@ public abstract class ExperienceOrbMixin {
          *
          * This preserves the original XP handling, including Mending, events,
          * sounds and any other logic executed when an experience orb is collected.
+         * Repeating the vanilla method consumes merged orb stacks in one tick.
+         * The original method is still responsible for decreasing the orb count
+         * and removing the orb when it is fully consumed.
          *
          * ES - Si un jugador esta lo suficientemente cerca, ejecutamos manualmente
          * el metodo playerTouch original de Minecraft en lugar de entregar la XP directamente.
          *
          * Esto conserva la gestion original de la XP, incluyendo Mending, eventos,
          * sonidos y cualquier otra logica ejecutada al recoger un orbe de experiencia.
+         * Repetir el metodo vanilla consume pilas de orbes fusionados en un tick.
+         * El metodo original sigue siendo responsable de reducir la cantidad del orbe
+         * y eliminarlo cuando se consume por completo.
          */
-        if (player != null) {
-            orb.playerTouch(player);
+        if (player != null
+                && !player.isSpectator()
+                && !player.isDeadOrDying()
+                && player.distanceToSqr(orb) < INSTANTXP_PICKUP_RANGE * INSTANTXP_PICKUP_RANGE) {
+            int pickups = Math.min(this.count, INSTANTXP_MAX_PICKUPS_PER_TICK);
+            while (pickups > 0 && orb.isAlive()) {
+                int countBeforePickup = this.count;
+                orb.playerTouch(player);
+                if (orb.isAlive() && this.count >= countBeforePickup) {
+                    return;
+                }
+
+                pickups--;
+            }
         }
     }
 }
