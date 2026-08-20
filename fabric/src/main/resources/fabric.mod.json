@@ -9,7 +9,6 @@
     "sources": "https://github.com/javiluli/InstantXP"
   },
   "license": "${license}",
-  "icon": "${mod_id}.png",
   "environment": "*",
   "entrypoints": {
     "main": ["com.javiluli.instantxp.InstantXP"]
