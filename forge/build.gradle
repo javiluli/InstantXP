@@ -6,6 +6,12 @@ base {
     archivesName = "${mod_name}-forge-${minecraft_version}"
 }
 
+tasks.named('jar', Jar) {
+    manifest {
+        attributes['MixinConfigs'] = "${mod_id}.mixins.json,${mod_id}.forge.mixins.json"
+    }
+}
+
 minecraft {
     mappings channel: 'official', version: minecraft_version
 
@@ -43,7 +49,7 @@ repositories {
 }
 
 dependencies {
-    implementation(minecraft.dependency([group: 'net.minecraftforge', name: 'forge', version: "${minecraft_version}-${forge_version}"]))
+    implementation(minecraft.dependency("net.minecraftforge:forge:${minecraft_version}-${forge_version}"))
 
     // Forge's hack fix
     implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }

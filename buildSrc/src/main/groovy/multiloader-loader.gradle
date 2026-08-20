@@ -30,6 +30,9 @@ tasks.named('compileJava', JavaCompile) {
 processResources {
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
+    from(rootProject.file('public/icon.png')) {
+        rename { "${mod_id}.png" }
+    }
 }
 
 tasks.named('javadoc', Javadoc).configure {
