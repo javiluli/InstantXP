@@ -27,7 +27,7 @@ In multiplayer, players do not need to install the mod on their clients. Install
 
 ## Time Table
 
-> This table (mc26.1) provides an estimate of the time required to absorb experience orbs in a controlled environment (a test world available for download [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip), starting from game version 1.21.1).
+> This table (Fabric for mc26.1) provides an estimate of the time required to absorb experience orbs in a controlled environment (a test world available for download [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip), starting from game version 1.21.1).
 
 | XP Level | MC vanilla | InstantXP V2.0 |  Diff  | Reduction |
 | -------: | :--------: | :------------: | :----: | :-------: |
