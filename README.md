@@ -1,10 +1,10 @@
 <div align="center">
-<a><img src='./public/icon.png' width='180' /></a>
+<img src='./public/icon.png' width='180' alt='InstantXP icon' />
 
 # InstantXP
 
-![Version](https://img.shields.io/badge/Version%20mod-2.0-1565C0?style=for-the-badge)
-![Minecraft Version](https://img.shields.io/badge/Minecraft-1.21.x/26.1-2E7D32?style=for-the-badge&logo=minecraft&logoColor=white)
+![Version](https://img.shields.io/badge/Mod%20Version-2.0.0-1565C0?style=for-the-badge)
+![Minecraft Version](https://img.shields.io/badge/Minecraft-26.1-2E7D32?style=for-the-badge&logo=minecraft&logoColor=white)
 <a href="https://www.curseforge.com/minecraft/mc-mods/instantxp">
 <img src="https://img.shields.io/curseforge/dt/1519995?style=for-the-badge&color=242629&labelColor=F16436&logo=curseforge&logoColor=white&label=" alt="CurseForge">
 </a>
@@ -17,17 +17,17 @@
 
 </div>
 
-This small quality-of-life mod makes experience absorption nearly instant, while still preserving part of the XP orb animation. It significantly reduces the delay when absorbing experience orbs.
+This small quality-of-life mod makes experience absorption nearly instant while still preserving part of the XP orb animation. InstantXP only changes how quickly orbs are collected: vanilla XP amounts, Mending behavior and orb values remain unchanged, and the mod does not create XP or manually discard orbs.
 
-## Install Notes
+## Installation
 
 Singleplayer works because Minecraft runs an integrated server inside the client. The XP logic still runs server-side, just within your local game.
 
-In multiplayer, players do not need to install the mod on their clients. Installing the mod only on the client will not affect XP behavior on a dedicated server, since XP pickup is handled entirely by the server.
+For multiplayer, install InstantXP on the server. Players do not need to install the mod on their clients. Installing the mod only on the client will not affect XP behavior on a dedicated server, since XP pickup is handled entirely by the server.
 
-## Time Table
+## Absorption Time Benchmark
 
-> This table (Fabric for mc26.1) provides an estimate of the time required to absorb experience orbs in a controlled environment (a test world available for download [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip), starting from game version 1.21.1).
+> This table, measured with Fabric on Minecraft 26.1, estimates XP absorption times in a controlled environment. The test world was originally created for Minecraft 1.21.1 and is available for download [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip).
 
 | XP Level | MC vanilla | InstantXP V2.0 |  Diff  | Reduction |
 | -------: | :--------: | :------------: | :----: | :-------: |
@@ -134,7 +134,7 @@ In multiplayer, players do not need to install the mod on their clients. Install
 
 ### Command blocks
 
-This section explains each command used to create the in-game level counter (map available [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip)).
+This section lists the commands used to create the in-game level counter (map available [here](https://github.com/javiluli/InstantXP/releases/download/mc1.21.1-1.0.1/test_world.zip)).
 
 <table>
   <tr>
