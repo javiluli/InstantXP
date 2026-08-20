@@ -99,10 +99,10 @@ public abstract class ExperienceOrbMixin {
                 && !player.isDeadOrDying()
                 && player.distanceToSqr(orb) < INSTANTXP_PICKUP_RANGE * INSTANTXP_PICKUP_RANGE) {
             int pickups = Math.min(this.count, INSTANTXP_MAX_PICKUPS_PER_TICK);
-            while (pickups > 0 && orb.isAlive()) {
+            while (pickups > 0 && this.count > 0 && orb.isAlive()) {
                 int countBeforePickup = this.count;
                 orb.playerTouch(player);
-                if (orb.isAlive() && this.count >= countBeforePickup) {
+                if (orb.isAlive() && this.count != countBeforePickup - 1) {
                     return;
                 }
 
